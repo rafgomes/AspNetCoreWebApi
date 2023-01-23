@@ -1,6 +1,7 @@
 ﻿using EFCore.Dominio;
 using EFCore.Repo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,7 +23,7 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                return Ok();
+                return Ok(new Heroi());
             }
             catch (Exception ex)
             {
@@ -67,8 +68,25 @@ namespace EFCore.WebAPI.Controllers
 
         // PUT api/<HeroiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, Heroi model)
         {
+            try
+            {
+                if(_context.Herois.AsNoTracking().FirstOrDefault(h => h.Id == id) != null)
+                {
+                    _context.Herois.Update(model);
+                    _context.SaveChanges();
+
+                    return Ok("DEU CERTO!");
+                }
+                return Ok("Não Encontrado!");
+
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro: {ex}");
+            }
         }
 
         // DELETE api/<HeroiController>/5
