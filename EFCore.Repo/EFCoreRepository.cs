@@ -17,12 +17,12 @@ namespace EFCore.Repo
             _context = context;
         }
         
-        public void Add<T>(Task entity) where T : class
+        public void Add<T>(T entity) where T : class
         {
             _context.Add(entity);
         }
 
-        public void Delete<T>(Task entity) where T : class
+        public void Delete<T>(T entity) where T : class
         {
             _context.Remove(entity);
         }
@@ -44,14 +44,40 @@ namespace EFCore.Repo
             return await query.ToArrayAsync();
         }
 
-        public Task<Heroi> GetHeroiById(int id)
+        public async Task<Heroi> GetHeroiById(int id, bool incluirBatalha = false)
         {
-            throw new NotImplementedException();
+            IQueryable<Heroi> query = _context.Herois
+                .Include(h => h.Identidade)
+                .Include(h => h.Armas);
+
+            if (incluirBatalha)
+            {
+                query = query.Include(h => h.HeroisBatalhas)
+                         .ThenInclude(heroib => heroib.Batalha);
+            }
+
+            query = query.AsNoTracking().OrderBy(h => h.Id);
+
+            return await query.FirstOrDefaultAsync(h => h.Id == id);
         }
 
-        public Task<Heroi> GetHeroiByNome(string nome)
+        public async Task<Heroi[]> GetHeroiByNome(string nome, bool incluirBatalha = false)
         {
-            throw new NotImplementedException();
+            IQueryable<Heroi> query = _context.Herois
+                .Include(h => h.Identidade)
+                .Include(h => h.Armas);
+
+            if (incluirBatalha)
+            {
+                query = query.Include(h => h.HeroisBatalhas)
+                         .ThenInclude(heroib => heroib.Batalha);
+            }
+
+            query = query.AsNoTracking()
+                .Where(h => h.Nome.Contains(nome))
+                .OrderBy(h => h.Id);
+
+            return await query.ToArrayAsync();
         }
 
         public async Task<bool> SaveChangeAsync()
@@ -59,9 +85,39 @@ namespace EFCore.Repo
            return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public void Update<T>(Task entity) where T : class
+        public void Update<T>(T entity) where T : class
         {
             _context.Update(entity);
+        }
+
+        public async Task<Batalha[]> GetAllBatalhas(bool incluirHerois = false)
+        {
+            IQueryable<Batalha> query = _context.Batalhas;
+
+            if (incluirHerois)
+            {
+                query = query.Include(h => h.HeroisBatalhas)
+                         .ThenInclude(heroib => heroib.Heroi);
+            }
+
+            query = query.AsNoTracking().OrderBy(h => h.Id);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Batalha> GetBatalhaById(int id, bool incluirHerois = false)
+        {
+            IQueryable<Batalha> query = _context.Batalhas;
+
+            if (incluirHerois)
+            {
+                query = query.Include(h => h.HeroisBatalhas)
+                         .ThenInclude(heroib => heroib.Heroi);
+            }
+
+            query = query.AsNoTracking().OrderBy(h => h.Id);
+
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

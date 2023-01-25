@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http.Json;
 
 namespace EFCore.WebAPI
 {
@@ -25,8 +26,9 @@ namespace EFCore.WebAPI
 
             services.AddScoped<IEFCoreRepository, EFCoreRepository>();
 
-            services.AddControllers()
-                .AddJsonOptions(opt => opt.JsonSerializerOptions.IgnoreNullValues = true);
+            services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.ReferenceHandler =
+                    System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
