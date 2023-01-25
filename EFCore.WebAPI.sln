@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Dominio", "EFCore.Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Repo", "EFCore.Repo\EFCore.Repo.csproj", "{EC13189D-45BA-47F2-90DA-9F1E968183C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Services", "EFCore.Services\EFCore.Services.csproj", "{2BBFE76C-25FB-4A88-9C8C-6F45D5992EBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTest", "WebApiTest\WebApiTest.csproj", "{AC476158-8DC2-423D-95F8-2616E14F416A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{EC13189D-45BA-47F2-90DA-9F1E968183C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC13189D-45BA-47F2-90DA-9F1E968183C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC13189D-45BA-47F2-90DA-9F1E968183C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BBFE76C-25FB-4A88-9C8C-6F45D5992EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BBFE76C-25FB-4A88-9C8C-6F45D5992EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BBFE76C-25FB-4A88-9C8C-6F45D5992EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBFE76C-25FB-4A88-9C8C-6F45D5992EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC476158-8DC2-423D-95F8-2616E14F416A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC476158-8DC2-423D-95F8-2616E14F416A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC476158-8DC2-423D-95F8-2616E14F416A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC476158-8DC2-423D-95F8-2616E14F416A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

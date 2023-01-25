@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Dominio;
+using EFCore.Dominio.Interfaces;
 using EFCore.Repo;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +16,12 @@ namespace EFCore.WebAPI.Controllers
     [ApiController]
     public class HeroiController : ControllerBase
     {
-        private readonly IEFCoreRepository _repo;
+        private readonly IHeroiServices heroiService;
 
-        public HeroiController(IEFCoreRepository repo)
+        public HeroiController(IHeroiServices heroiService)
         {
-            _repo = repo;
+            
+            this.heroiService = heroiService;
         }
         // GET: api/Heroi
         [HttpGet]
@@ -26,13 +29,13 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var herois = await _repo.GetAllHerois(true);
+                var herois = await heroiService.GetAllHerois(true);
 
                 return Ok(herois);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Erro: {ex}");
+                return BadRequest($"Erro: {ex.Message}");
             }
         }
 
@@ -42,9 +45,9 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var herois = await _repo.GetHeroiById(id, true);
+                Heroi heroi = await heroiService.GetHeroiById(id, true);
 
-                return Ok(herois);
+                return Ok(heroi);
             }
             catch (Exception ex)
             {
@@ -58,19 +61,14 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                _repo.Add(model);
+                string result = await heroiService.AddHeroi(model);
 
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("BAZINGA");
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
+            }            
         }
 
         // PUT: api/Heroi/5
@@ -79,21 +77,15 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var heroi = await _repo.GetHeroiById(id);
-                if (heroi != null)
-                {
-                    _repo.Update(model);
 
-                    if (await _repo.SaveChangeAsync())
-                        return Ok("BAZINGA");
-                }
+                string result = await heroiService.UpdateHeroi(id, model);
+                return Ok(result);
+
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest($"Não Deletado!");
+            }           
         }
 
         // DELETE: api/ApiWithActions/5
@@ -102,21 +94,15 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var heroi = await _repo.GetHeroiById(id);
-                if (heroi != null)
-                {
-                    _repo.Delete(heroi);
+                var result = await heroiService.DeleteHeroi(id);
 
-                    if (await _repo.SaveChangeAsync())
-                        return Ok("BAZINGA");
-                }
+                return Ok(result);
+               
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest($"Não Deletado!");
+            }          
         }
     }
 }
